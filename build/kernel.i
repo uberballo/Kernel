@@ -1,23 +1,69 @@
-#include "kernel.h"
-#include "char.h"
+# 0 "src/kernel.c"
+# 0 "<built-in>"
+# 0 "<command-line>"
+# 1 "/usr/include/stdc-predef.h" 1 3 4
+# 0 "<command-line>" 2
+# 1 "src/kernel.c"
+# 1 "include/kernel.h" 1
+
+
+
+# 1 "include/types.h" 1
+
+
+
+typedef unsigned char uint8;
+typedef unsigned short uint16;
+typedef unsigned int uint32;
+# 5 "include/kernel.h" 2
+
+
+
+
+uint16* vga_buffer;
+
+
+
+enum vga_color {
+    BLACK,
+    BLUE,
+    GREEN,
+    CYAN,
+    RED,
+    MAGENTA,
+    BROWN,
+    GREY,
+    DARK_GREY,
+    BRIGHT_BLUE,
+    BRIGHT_GREEN,
+    BRIGHT_CYAN,
+    BRIGHT_RED,
+    BRIGHT_MAGENTA,
+    YELLOW,
+    WHITE,
+};
+
+# 1 "include/keyboard.h" 1
+# 33 "include/kernel.h" 2
+# 2 "src/kernel.c" 2
+# 1 "include/char.h" 1
+
+
+
+
+
+
+
+extern char get_ascii_char(uint8);
+# 3 "src/kernel.c" 2
 
 uint32 vga_index;
 static uint32 next_line_index = 1;
 uint8 g_fore_color = WHITE, g_back_color = BLUE;
 
 int digit_ascii_codes[10] = {0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39};
-
-
-/*
-16 bit video buffer elements(register ax)
-8 bits(ah) higher : 
-  lower 4 bits - forec olor
-  higher 4 bits - back color
-
-8 bits(al) lower :
-  8 bits : ASCII character to print
-*/
-uint16 vga_entry(unsigned char ch, uint8 fore_color, uint8 back_color) 
+# 20 "src/kernel.c"
+uint16 vga_entry(unsigned char ch, uint8 fore_color, uint8 back_color)
 {
   uint16 ax = 0;
   uint8 ah = 0, al = 0;
@@ -33,22 +79,22 @@ uint16 vga_entry(unsigned char ch, uint8 fore_color, uint8 back_color)
   return ax;
 }
 
-//clear video buffer array
+
 void clear_vga_buffer(uint16 **buffer, uint8 fore_color, uint8 back_color)
 {
   uint32 i;
-  for(i = 0; i < BUFSIZE; i++){
-    (*buffer)[i] = vga_entry(NULL, fore_color, back_color);
+  for(i = 0; i < 2200; i++){
+    (*buffer)[i] = vga_entry(0, fore_color, back_color);
   }
   next_line_index = 1;
   vga_index = 0;
 }
 
-//initialize vga buffer
+
 void init_vga(uint8 fore_color, uint8 back_color)
 {
-  vga_buffer = (uint16*)VGA_ADDRESS;  //point vga_buffer pointer to VGA_ADDRESS 
-  clear_vga_buffer(&vga_buffer, fore_color, back_color);  //clear buffer
+  vga_buffer = (uint16*)0xB8000;
+  clear_vga_buffer(&vga_buffer, fore_color, back_color);
   g_fore_color = fore_color;
   g_back_color = back_color;
 }
@@ -138,7 +184,7 @@ void outb(uint16 port, uint8 data)
 char get_input_keycode()
 {
   char ch = 0;
-  while((ch = inb(KEYBOARD_PORT)) != 0){
+  while((ch = inb(0x60)) != 0){
     if(ch > 0)
       return ch;
   }
@@ -166,7 +212,7 @@ void test_input()
   char keycode = 0;
   do{
     keycode = get_input_keycode();
-    if(keycode == KEY_ENTER){
+    if(keycode == 0x1C){
       print_new_line();
     }else{
       ch = get_ascii_char(keycode);
@@ -178,14 +224,14 @@ void test_input()
 
 void kernel_entry()
 {
-  //first init vga with fore & back colors
+
   init_vga(WHITE, BLACK);
 
-  //assign each ASCII character to video buffer
-  //you can change colors here
+
+
   print_string("hello world!");
   print_new_line();
-  //print_int(123456);
-  //print_new_line();
+
+
   test_input();
 }

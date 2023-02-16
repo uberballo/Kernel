@@ -2,9 +2,9 @@
 as --32 boot.s -o boot.o
 
 #compile compilie all files
-gcc -m32 -c kernel.c -o kernel.o -std=gnu99 -ffreestanding -O1 -Wall -Wextra
+gcc -m32 -c src/kernel.c -o kernel.o -std=gnu99 -ffreestanding -O1 -Wall -Wextra
 
-gcc -m32 -c char.c -o char.o -std=gnu99 -ffreestanding -O1 -Wall -Wextra
+gcc -m32 -c src/char.c -o char.o -std=gnu99 -ffreestanding -O1 -Wall -Wextra
 
 # linking all the object files to MyOs.bin
 ld -m elf_i386 -T linker.ld kernel.o char.o boot.o -o MyOS.bin -nostdlib
@@ -19,4 +19,4 @@ cp grub.cfg isodir/boot/grub/grub.cfg
 grub-mkrescue -o MyOS.iso isodir
 
 #run it in qemu
-qemu-system-x86_64 -cdrom MyOS.iso
+qemu-system-x86_64 -cdrom Kernel.iso
