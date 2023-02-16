@@ -165,18 +165,19 @@ isr1:
 isr2:
     cli
     push byte 0
-    push byte 1
+    push byte 2
     jmp isr_common_stub
 
 isr3:
     cli
     push byte 0
-    push byte 1
+    push byte 3
     jmp isr_common_stub
     
                 ; Fill in from 2 to 7 here!
 
 ;  8: Double Fault Exception (With Error Code!)
+; Dont push 0 if the exception is with an error code!!
 isr8:
     cli
     push byte 8        ; Note that we DON'T push a value on the stack in this one!
@@ -191,13 +192,13 @@ isr8:
 isr30:
     cli
     push byte 0
-    push byte 1
+    push byte 30
     jmp isr_common_stub
 
 isr31:
     cli
     push byte 0
-    push byte 1
+    push byte 31
     jmp isr_common_stub
 
 ; We call a C function in here. We need to let the assembler know
