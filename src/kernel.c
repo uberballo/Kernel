@@ -75,6 +75,8 @@ void main()
   gdt_install();
   idt_install();
   isrs_install();
+  irq_install();
+  asm volatile ("sti"); // Set interrupt flag
   init_video();
   puts("hello world");
   int a = 1;

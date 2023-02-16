@@ -39,7 +39,8 @@ OBJECTS=$(ASM_OBJ)/boot.o\
 		$(OBJ)/kernel.o \
 		$(OBJ)/gdt.o \
  		$(OBJ)/idt.o \
- 		$(OBJ)/irs.o \
+ 		$(OBJ)/isr.o \
+ 		$(OBJ)/irq.o \
 		$(OBJ)/scrn.o 
 
 
@@ -90,9 +91,14 @@ $(OBJ)/idt.o : $(SRC)/idt.c
 	$(CC) $(CC_FLAGS) -c $(SRC)/idt.c -o $(OBJ)/idt.o
 	@printf "\n"
 
-$(OBJ)/irs.o : $(SRC)/irs.c
-	@printf "[ $(SRC)/irs.c ]\n"
-	$(CC) $(CC_FLAGS) -c $(SRC)/irs.c -o $(OBJ)/irs.o
+$(OBJ)/isr.o : $(SRC)/isr.c
+	@printf "[ $(SRC)/isr.c ]\n"
+	$(CC) $(CC_FLAGS) -c $(SRC)/isr.c -o $(OBJ)/isr.o
+	@printf "\n"
+
+$(OBJ)/irq.o : $(SRC)/irq.c
+	@printf "[ $(SRC)/irq.c ]\n"
+	$(CC) $(CC_FLAGS) -c $(SRC)/irq.c -o $(OBJ)/irq.o
 	@printf "\n"
 
 clean:

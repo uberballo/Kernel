@@ -173,6 +173,35 @@ isr3:
     push byte 0
     push byte 3
     jmp isr_common_stub
+
+;  4: INTO Exception
+isr4:
+    cli
+    push byte 0
+    push byte 4
+    jmp isr_common_stub
+
+;  5: Out of Bounds Exception
+isr5:
+    cli
+    push byte 0
+    push byte 5
+    jmp isr_common_stub
+
+;  6: Invalid Opcode Exception
+isr6:
+    cli
+    push byte 0
+    push byte 6
+    jmp isr_common_stub
+
+;  7: Coprocessor Not Available Exception
+isr7:
+    cli
+    push byte 0
+    push byte 7
+    jmp isr_common_stub
+
     
                 ; Fill in from 2 to 7 here!
 
@@ -185,8 +214,151 @@ isr8:
                    ; that pop error codes!
     jmp isr_common_stub
 
-                ; You should fill in from _isr9 to _isr31 here. Remember to
+                ; You should fill in from isr9 to isr31 here. Remember to
                    ; use the correct stubs to handle error codes and push dummies!
+
+
+;  9: Coprocessor Segment Overrun Exception
+isr9:
+    cli
+    push byte 0
+    push byte 9
+    jmp isr_common_stub
+
+; 10: Bad TSS Exception (With Error Code!)
+isr10:
+    cli
+    push byte 10
+    jmp isr_common_stub
+
+; 11: Segment Not Present Exception (With Error Code!)
+isr11:
+    cli
+    push byte 11
+    jmp isr_common_stub
+
+; 12: Stack Fault Exception (With Error Code!)
+isr12:
+    cli
+    push byte 12
+    jmp isr_common_stub
+
+; 13: General Protection Fault Exception (With Error Code!)
+isr13:
+    cli
+    push byte 13
+    jmp isr_common_stub
+
+; 14: Page Fault Exception (With Error Code!)
+isr14:
+    cli
+    push byte 14
+    jmp isr_common_stub
+
+; 15: Reserved Exception
+isr15:
+    cli
+    push byte 0
+    push byte 15
+    jmp isr_common_stub
+
+; 16: Floating Point Exception
+isr16:
+    cli
+    push byte 0
+    push byte 16
+    jmp isr_common_stub
+
+; 17: Alignment Check Exception
+isr17:
+    cli
+    push byte 0
+    push byte 17
+    jmp isr_common_stub
+
+; 18: Machine Check Exception
+isr18:
+    cli
+    push byte 0
+    push byte 18
+    jmp isr_common_stub
+
+; 19: Reserved
+isr19:
+    cli
+    push byte 0
+    push byte 19
+    jmp isr_common_stub
+
+; 20: Reserved
+isr20:
+    cli
+    push byte 0
+    push byte 20
+    jmp isr_common_stub
+
+; 21: Reserved
+isr21:
+    cli
+    push byte 0
+    push byte 21
+    jmp isr_common_stub
+
+; 22: Reserved
+isr22:
+    cli
+    push byte 0
+    push byte 22
+    jmp isr_common_stub
+
+; 23: Reserved
+isr23:
+    cli
+    push byte 0
+    push byte 23
+    jmp isr_common_stub
+
+; 24: Reserved
+isr24:
+    cli
+    push byte 0
+    push byte 24
+    jmp isr_common_stub
+
+; 25: Reserved
+isr25:
+    cli
+    push byte 0
+    push byte 25
+    jmp isr_common_stub
+
+; 26: Reserved
+isr26:
+    cli
+    push byte 0
+    push byte 26
+    jmp isr_common_stub
+
+; 27: Reserved
+isr27:
+    cli
+    push byte 0
+    push byte 27
+    jmp isr_common_stub
+
+; 28: Reserved
+isr28:
+    cli
+    push byte 0
+    push byte 28
+    jmp isr_common_stub
+
+; 29: Reserved
+isr29:
+    cli
+    push byte 0
+    push byte 29
+    jmp isr_common_stub
 
 
 isr30:
@@ -231,3 +403,53 @@ isr_common_stub:
     popa
     add esp, 8     ; Cleans up the pushed error code and pushed ISR number
     iret           ; pops 5 things at once: CS, EIP, EFLAGS, SS, and ESP!
+
+
+global irq0
+; You complete the rest!
+global irq15
+
+; 32: IRQ0
+irq0:
+    cli
+    push byte 0    ; Note that these don't push an error code on the stack:
+                   ; We need to push a dummy error code
+    push byte 32
+    jmp irq_common_stub
+
+; You need to fill in the rest!
+
+; 47: IRQ15
+irq15:
+    cli
+    push byte 0
+    push byte 47
+    jmp irq_common_stub
+
+extern irq_handler
+
+; This is a stub that we have created for IRQ based ISRs. This calls
+; '_irq_handler' in our C code. We need to create this in an 'irq.c'
+irq_common_stub:
+    pusha
+    push ds
+    push es
+    push fs
+    push gs
+    mov ax, 0x10
+    mov ds, ax
+    mov es, ax
+    mov fs, ax
+    mov gs, ax
+    mov eax, esp
+    push eax
+    mov eax, irq_handler
+    call eax
+    pop eax
+    pop gs
+    pop fs
+    pop es
+    pop ds
+    popa
+    add esp, 8
+    iret

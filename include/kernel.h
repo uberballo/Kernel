@@ -33,4 +33,8 @@ struct regs
     unsigned int eip, cs, eflags, useresp, ss;   /* pushed by the processor automatically */ 
 };
 
+/* irq.c */
+extern void irq_install();
+extern void irq_install_handler(int irq, void (*handler)(struct regs *r));
+
 #endif
