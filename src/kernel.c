@@ -78,9 +78,10 @@ void main()
   irq_install();
   asm volatile ("sti"); // Set interrupt flag
   init_video();
+  timer_install();
+  keyboard_install();
   puts("hello world");
   int a = 1;
-  putch(a / 0);
     /* ...and leave this loop in. There is an endless loop in
     *  'start.asm' also, if you accidentally delete this next line */
     for (;;);

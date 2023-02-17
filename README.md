@@ -11,5 +11,7 @@ Have the following:
 # How to run
 Run  
 ```
-    ./run.sh
+    make
+    qemu-system-x86_64 -cdrom ./out/Kernel.iso
+
 ```

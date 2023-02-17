@@ -41,6 +41,8 @@ OBJECTS=$(ASM_OBJ)/boot.o\
  		$(OBJ)/idt.o \
  		$(OBJ)/isr.o \
  		$(OBJ)/irq.o \
+ 		$(OBJ)/timer.o \
+ 		$(OBJ)/keyboard.o \
 		$(OBJ)/scrn.o 
 
 
@@ -99,6 +101,16 @@ $(OBJ)/isr.o : $(SRC)/isr.c
 $(OBJ)/irq.o : $(SRC)/irq.c
 	@printf "[ $(SRC)/irq.c ]\n"
 	$(CC) $(CC_FLAGS) -c $(SRC)/irq.c -o $(OBJ)/irq.o
+	@printf "\n"
+
+$(OBJ)/timer.o : $(SRC)/timer.c
+	@printf "[ $(SRC)/timer.c ]\n"
+	$(CC) $(CC_FLAGS) -c $(SRC)/timer.c -o $(OBJ)/timer.o
+	@printf "\n"
+
+$(OBJ)/keyboard.o : $(SRC)/keyboard.c
+	@printf "[ $(SRC)/keyboard.c ]\n"
+	$(CC) $(CC_FLAGS) -c $(SRC)/keyboard.c -o $(OBJ)/keyboard.o
 	@printf "\n"
 
 clean:
