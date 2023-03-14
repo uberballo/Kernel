@@ -57,6 +57,7 @@ all: $(OBJECTS)
 	$(CP) $(CONFIG)/grub.cfg $(ISO_DIR)/boot/grub/
 	$(GRUB) -o $(TARGET_ISO) $(ISO_DIR)
 	rm -f $(TARGET)
+	qemu-system-x86_64 -cdrom ./out/Kernel.iso
 
 $(ASM_OBJ)/boot.o : $(ASM_SRC)/boot.s
 	@printf "[ $(ASM_SRC)/boot.s ]\n"
