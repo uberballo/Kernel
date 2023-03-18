@@ -72,7 +72,7 @@ void cls()
     /* Update out virtual cursor, and then move the
     *  hardware cursor */
     csr_x = 0;
-    csr_y = 0;
+    csr_y = 1;
     move_csr();
 }
 
@@ -129,6 +129,28 @@ void putch(unsigned char c)
     /* Scroll the screen if needed, and finally move the cursor */
     scroll();
     move_csr();
+}
+
+
+void update_time(int time)
+{
+    char str_num[digit_count(time)+1];
+    itoa(time, str_num);
+    unsigned short *where;
+    unsigned att = attrib << 8;
+    unsigned char c = "c";
+    char text[] ="Seconds since boot: ";
+
+    int i = 0;
+    for (;i<strlen(text);i++) {
+        where = textmemptr + i;
+        *where = text[i] | att;	
+    }
+    int j = 0;
+    for (;j<strlen(str_num);j++){
+        where = textmemptr +i+ j;
+        *where = str_num[j] | att;	
+    }
 }
 
 /* Uses the above routine to output a string... */

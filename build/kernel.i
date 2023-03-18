@@ -135,25 +135,6 @@ uint32 digit_count(int num)
   return count;
 }
 
-void itoa(int num, char *number)
-{
-  int dgcount = digit_count(num);
-  int index = dgcount -1;
-  char x;
-  if(num == 0 && dgcount == 1){
-    number[0] = '0';
-    number[0] = '\0';
-  } else {
-    while(num != 0) {
-      x = num % 10;
-      number[index] = x + '0';
-      index--;
-      num = num/10;
-    }
-    number[dgcount] = '\0';
-  }
-}
-
 void print_string(char *str)
 {
   uint32 index = 0;

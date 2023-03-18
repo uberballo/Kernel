@@ -43,10 +43,15 @@ OBJECTS=$(ASM_OBJ)/boot.o\
  		$(OBJ)/irq.o \
  		$(OBJ)/timer.o \
  		$(OBJ)/keyboard.o \
-		$(OBJ)/scrn.o 
+		$(OBJ)/scrn.o \
+		$(OBJ)/utils.o 
 
 
-all: $(OBJECTS)
+
+run: $(TARGET_ISO)
+	qemu-system-x86_64 -cdrom $(TARGET_ISO)
+
+$(TARGET_ISO): $(OBJECTS)
 	@printf "[ linking... ]\n"
 	$(LD) $(LD_FLAGS) -o $(TARGET) $(OBJECTS)
 	grub-file --is-x86-multiboot $(TARGET)
@@ -57,7 +62,6 @@ all: $(OBJECTS)
 	$(CP) $(CONFIG)/grub.cfg $(ISO_DIR)/boot/grub/
 	$(GRUB) -o $(TARGET_ISO) $(ISO_DIR)
 	rm -f $(TARGET)
-	qemu-system-x86_64 -cdrom ./out/Kernel.iso
 
 $(ASM_OBJ)/boot.o : $(ASM_SRC)/boot.s
 	@printf "[ $(ASM_SRC)/boot.s ]\n"
@@ -112,6 +116,11 @@ $(OBJ)/timer.o : $(SRC)/timer.c
 $(OBJ)/keyboard.o : $(SRC)/keyboard.c
 	@printf "[ $(SRC)/keyboard.c ]\n"
 	$(CC) $(CC_FLAGS) -c $(SRC)/keyboard.c -o $(OBJ)/keyboard.o
+	@printf "\n"
+
+$(OBJ)/utils.o : $(SRC)/utils.c
+	@printf "[ $(SRC)/util.c ]\n"
+	$(CC) $(CC_FLAGS) -c $(SRC)/utils.c -o $(OBJ)/utils.o
 	@printf "\n"
 
 clean:

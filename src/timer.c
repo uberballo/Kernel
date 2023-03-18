@@ -21,7 +21,8 @@ void timer_handler(struct regs *r)
 
     if (timer_ticks % hz == 0)
     {
-        puts("One second has passed\n");
+        //puts("One second has passed\n");
+        update_time(timer_ticks/100);
     }
 }
 

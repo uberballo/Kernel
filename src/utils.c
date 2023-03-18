@@ -1,16 +1,19 @@
 #include "utils.h"
 
-uint32 strlen(const char* str)
+int strlen(const char* str)
 {
-  uint32 length = 0;
+    /* This loops through character array 'str', returning how
+    *  many characters it needs to check before it finds a 0.
+    *  In simple words, it returns the length in bytes of a string */
+  int length = 0;
   while(str[length])
     length++;
   return length;
 }
 
-uint32 digit_count(int num)
+int digit_count(int num)
 {
-  uint32 count = 0;
+  int count = 0;
   if(num == 0)
     return 1;
   while(num > 0){
