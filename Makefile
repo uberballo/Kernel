@@ -44,12 +44,13 @@ OBJECTS=$(ASM_OBJ)/boot.o\
  		$(OBJ)/timer.o \
  		$(OBJ)/keyboard.o \
 		$(OBJ)/scrn.o \
+		$(OBJ)/mouse.o \
 		$(OBJ)/utils.o 
 
 
 
 run: $(TARGET_ISO)
-	qemu-system-x86_64 -cdrom $(TARGET_ISO)
+	qemu-system-x86_64 $(TARGET_ISO)
 
 $(TARGET_ISO): $(OBJECTS)
 	@printf "[ linking... ]\n"
@@ -121,6 +122,11 @@ $(OBJ)/keyboard.o : $(SRC)/keyboard.c
 $(OBJ)/utils.o : $(SRC)/utils.c
 	@printf "[ $(SRC)/util.c ]\n"
 	$(CC) $(CC_FLAGS) -c $(SRC)/utils.c -o $(OBJ)/utils.o
+	@printf "\n"
+
+$(OBJ)/mouse.o : $(SRC)/mouse.c
+	@printf "[ $(SRC)/mouse.c ]\n"
+	$(CC) $(CC_FLAGS) -c $(SRC)/mouse.c -o $(OBJ)/mouse.o
 	@printf "\n"
 
 clean:

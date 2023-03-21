@@ -1,3 +1,5 @@
+#include "irq.h"
+
 /* KBDUS means US Keyboard Layout. This is a scancode table
 *  used to layout a standard US keyboard. I have left some
 *  comments in to give you an idea of what key is what, even
@@ -74,6 +76,7 @@ void keyboard_handler(struct regs *r)
         *  you would add 128 to the scancode when you look for it */
         putch(kbdus[scancode]);
     }
+	irq_ack(1);
 }
 
 void keyboard_install(){

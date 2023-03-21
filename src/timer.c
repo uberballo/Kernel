@@ -1,4 +1,5 @@
 #include "kernel.h"
+#include "irq.h"
 
 /* This will keep track of how many ticks that the system
 *  has been running for */
@@ -24,6 +25,7 @@ void timer_handler(struct regs *r)
         //puts("One second has passed\n");
         update_time(timer_ticks/100);
     }
+    irq_ack(0);
 }
 
 /* This will continuously loop until the given time has

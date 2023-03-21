@@ -1,4 +1,6 @@
 #include "kernel.h"
+#include "scrn.h"
+#include "types.h"
 
 /* These are own ISRs that point to our special IRQ handler
 *  instead of the regular 'fault_handler' function */
@@ -30,6 +32,7 @@ void *irq_routines[16] =
 /* This installs a custom IRQ handler for the given IRQ */
 void irq_install_handler(int irq, void (*handler)(struct regs *r))
 {
+    printf("IRQ %d registered\n", irq);
     irq_routines[irq] = handler;
 }
 
@@ -98,26 +101,30 @@ void irq_install()
 *  an EOI, you won't raise any more IRQs */
 void irq_handler(struct regs *r)
 {
+    IRQ_OFF;
     /* This is a blank function pointer */
     void (*handler)(struct regs *r);
 
     /* Find out if we have a custom handler to run for this
     *  IRQ, and then finally, run it */
-    handler = irq_routines[r->int_no - 32];
+	if (r->int_no > 47 || r->int_no < 32) {
+		handler = NULL;
+	} else {
+		handler = irq_routines[r->int_no - 32];
+	}    
     if (handler)
     {
         handler(r);
+    } else {
+        irq_ack(r->int_no - 32);
     }
 
-    /* If the IDT entry that was invoked was greater than 40
-    *  (meaning IRQ8 - 15), then we need to send an EOI to
-    *  the slave controller */
-    if (r->int_no >= 40)
-    {
+    IRQ_RES;
+}
+
+void irq_ack(int irq_no) {
+    if (irq_no >= 12) {
         outportb(0xA0, 0x20);
     }
-
-    /* In either case, we need to send an EOI to the master
-    *  interrupt controller too */
     outportb(0x20, 0x20);
 }
