@@ -11,5 +11,7 @@
 #include "timer.h"
 #include "keyboard.h"
 #include "mouse.h"
+#include "vga.h"
+#include "stdint.h"
 
 #endif

@@ -24,7 +24,8 @@ DEFINES=
 # assembler flags
 ASM_FLAGS = -f elf32
 # compiler flags
-CC_FLAGS = $(INCLUDE) $(DEFINES) -m32 -std=gnu99 -fno-pie -ffreestanding -Wall -Wextra -fstrength-reduce -fomit-frame-pointer -finline-functions -nostdinc -fno-builtin  
+CC_FLAGS = $(INCLUDE) $(DEFINES) -m32 -std=gnu99 -fno-pie -ffreestanding -Wall -Wextra -fstrength-reduce -fomit-frame-pointer -finline-functions -fno-builtin
+# -nostdinc
 # linker flags, for linker add linker.ld file too
 LD_FLAGS = -m elf_i386 -T $(CONFIG)/linker.ld -nostdlib
 
@@ -36,6 +37,7 @@ TARGET_ISO=$(OUT)/Kernel.iso
 ISO_DIR=$(OUT)/isodir
 
 OBJECTS=$(ASM_OBJ)/boot.o\
+		$(ASM_OBJ)/int32.o \
 		$(OBJ)/kernel.o \
 		$(OBJ)/gdt.o \
  		$(OBJ)/idt.o \
@@ -45,7 +47,9 @@ OBJECTS=$(ASM_OBJ)/boot.o\
  		$(OBJ)/keyboard.o \
 		$(OBJ)/scrn.o \
 		$(OBJ)/mouse.o \
-		$(OBJ)/utils.o 
+		$(OBJ)/utils.o \
+		$(OBJ)/vga.o 
+
 
 
 
@@ -67,6 +71,11 @@ $(TARGET_ISO): $(OBJECTS)
 $(ASM_OBJ)/boot.o : $(ASM_SRC)/boot.s
 	@printf "[ $(ASM_SRC)/boot.s ]\n"
 	$(ASM) $(ASM_FLAGS) $(ASM_SRC)/boot.s -o $(ASM_OBJ)/boot.o
+	@printf "\n"
+
+$(ASM_OBJ)/int32.o : $(ASM_SRC)/int32.s
+	@printf "[ $(ASM_SRC)/int32.s ]\n"
+	$(ASM) $(ASM_FLAGS) $(ASM_SRC)/int32.s -o $(ASM_OBJ)/int32.o
 	@printf "\n"
 
 $(OBJ)/char.o : $(SRC)/char.c
@@ -127,6 +136,11 @@ $(OBJ)/utils.o : $(SRC)/utils.c
 $(OBJ)/mouse.o : $(SRC)/mouse.c
 	@printf "[ $(SRC)/mouse.c ]\n"
 	$(CC) $(CC_FLAGS) -c $(SRC)/mouse.c -o $(OBJ)/mouse.o
+	@printf "\n"
+
+$(OBJ)/vga.o : $(SRC)/vga.c
+	@printf "[ $(SRC)/vga.c ]\n"
+	$(CC) $(CC_FLAGS) -c $(SRC)/vga.c -o $(OBJ)/vga.o
 	@printf "\n"
 
 clean:
